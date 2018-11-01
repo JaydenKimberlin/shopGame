@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Game</title>
+    <meta charset="utf-8" />
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        body {
+            font-family: Roboto;
+            color: white;
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1><b>Life: </b>The game</h1>
+    <p id="wallet"></p>
+    <p id="inventory"></p>
+    <button onclick="enterStore()">Enter Store</button>
+    <script>
+        var whichItems;
+        var decisionChoice = ["yes", "no"];
+        var items = ["Banana", "Sword", "Gun", "Caleb"];
+        var descriptions = ["It's full of pottassium!", "It's sharp and pointy.", "Bang bang!", "What the fuck?"]
+        var userInv = [];
+        var price = [1, 25, 115, 435];
+        var getGold = Math.floor(Math.random() * 401) + 100;
+        document.getElementById("wallet").innerHTML = "Wallet: " + getGold + "₿";
+
+        // Functions
+        function displayInventory() {
+            text = "Inventory: ";
+            for (var i = 0; i < userInv.length; i++) {
+                text += userInv[i];
+                if (i != userInv.length - 1) {
+                    text += ", "
+                }
+            }
+            document.getElementById("inventory").innerHTML = text;
+        }
+
+        function showWallet() {
+            document.getElementById("wallet").innerHTML = "There's only " + getGold + "₿";
+        }
+
+        function enterStore() {
+            var text = "";
+            for (var i = 0; i < items.length; i++) {
+                text += (i + 1) + ". " + items[i] + "\n";
+            }
+            whichItems = (prompt("Welcome to the store!\n" + text + (i + 1) + ". Sell") - 1);
+            if (whichItems == items.length) {
+                removeItem("lessItem");
+            }
+            if ((whichItems >= 0) && (whichItems < items.length)) {
+                alert("You selected: " + items[whichItems] + "\nThis costs " + price[whichItems] + "₿\n" + "About this item... " + descriptions[whichItems]);
+                if (confirm("Are you sure you want to buy this?")) {
+                    if (getGold >= price[whichItems]) {
+                        alert(items[whichItems] + " added to your inventory.\nThank you come again!");
+                        addItem(items[whichItems]);
+                        getGold -= price[whichItems];
+                        document.getElementById("wallet").innerHTML = "Wallet: " + getGold + "₿";
+                    } else {
+                        if (confirm("Would you like to put this onto credit? (You might be in debt after this...)")) {
+                            alert(items[whichItems] + " added to your inventory.\nThank you come again!");
+                            addItem(items[whichItems]);
+                            getGold -= price[whichItems];
+                            document.getElementById("wallet").innerHTML = "Wallet: " + getGold + "₿";
+                            document.getElementById("wallet").style.color = "red";
+                        } else {
+                            alert("Maybe a good choice, come again!");
+                        }
+                    }
+                } else {
+                    alert("Goodbye");
+                }
+            }
+            displayInventory();
+        }
+
+        function addItem(newItem) {
+            userInv.push(newItem);
+        }
+
+        function removeItem(lessItem) {
+            var sellPrompt = prompt("Which item would you like to sell?");
+            for (i = 0; i < userInv.length; i++) {
+                text += (i + 1) + ". " + userInv[i] + "\n";
+            }
+        }
+        // Code Execution
+        displayInventory();
+    </script>
+</body>
+
+</html>
